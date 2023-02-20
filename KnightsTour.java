@@ -16,7 +16,7 @@
 //                possibility of overlaying an opaque panel over the grid
 //                is still being considered to visually show the path of the
 //                knight as it tours the board.
-package ktdemo;
+//package ktdemo;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
@@ -50,7 +50,6 @@ public class KnightsTour {
     private Point[] solution;
     
     private int[][] path;
-    private boolean[][] visited;
     private static final int[][] OFFSETS = new int[][]{{2, 1}, {2, -1}, {-2, 1}, {-2, -1}, {1, 2}, {1, -2}, {-1, 2}, {-1, -1}};
     
     /** No-arg constructor initializes the GUI:
@@ -199,13 +198,12 @@ public class KnightsTour {
         }
     } // end of StartTourListener class
     
-    
-    /** The main method to find the solution. 
-        Students: This brute-force hard-coded solution is here so that
-        a valid tour can be seen as the program is executed. This is your
-        starting point to write the solution to the Knights Tour.
-    @param start The starting Point of the knight.
-    */
+    /**
+     * The non recursive method to find the knights tour given a specific starting point
+     * @author Nikolas Leslie
+     * @param start A point representing the position on the board in which the knight starts
+     * @return A boolean saying if a solution to the tour was found
+     */
     private boolean findSolution(Point start) {
         solution = new Point[board.getCurSize() * board.getCurSize()];
         
@@ -219,7 +217,7 @@ public class KnightsTour {
             }
         }
         
-        if(findSolution((int)start.getX(), (int)start.getY(), 0, solution.length)){
+        if(findSolution((int)start.getX(), (int)start.getY(), 1, solution.length)){
             int count = 0;
             while(count < solution.length){
                 for(int i = 0; i < board.getCurSize(); i++){
@@ -233,17 +231,44 @@ public class KnightsTour {
             }
         }
         return false;
-    } // end of findSolution() method.
-    
-    // Students might need an enumerated data type.
-    public enum Direction {NNE,NEE, SEE, SSE, SSW, SWW, NWW, NNW};
-    
-    // Some suggested methods to implement...
+    }
+
+    /**
+     * A recursive method to find the path of the knights tour
+     * @author Nikolas Leslie
+     * @param x The current x value of the knight
+     * @param y The current y value of the knight
+     * @param count The move number currently on
+     * @param size The number of total squares on the board
+     * @return A boolean representing if a solution to the tour was found
+     */
     private boolean findSolution(int x, int y, int count, int size){
         if(count >= size){
             return true;
         }
         
+        for(int[] offset: OFFSETS){
+            if(validMove(x, y, offset) && path[y + offset[1]][x + offset[0]] == -1){
+                path[y + offset[1]][x + offset[0]] = count;
+                if(findSolution(x + offset[0], y + offset[1], count + 1, size)){
+                    return true;
+                }
+                path[y + offset[1]][x + offset[0]] = -1;
+            }
+        }
+        
         return false;
+    }
+
+    /**
+     * A method that tells if a move is within the bounds of the board
+     * @author Nikolas leslie
+     * @param x The starting x value
+     * @param y The starting y value
+     * @param offset The x and y offsets representing the move
+     * @return A boolean representing if the move is within bounds of the board
+     */
+    private boolean validMove(int x, int y, int[] offset){
+        return (x + offset[0] >= 0 && x + offset[0] < board.getCurSize()) && (y + offset[1] >= 0 && y + offset[1] < board.getCurSize());
     }
 }
