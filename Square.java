@@ -3,7 +3,7 @@
 // Last Modified: 03/12/2014
 // Description  : This Square class is used in the Knights Tour for my
 //                Math 271 students.
-package ktdemo;
+//package ktdemo;
 
 import java.awt.Color;
 import java.awt.Font;
