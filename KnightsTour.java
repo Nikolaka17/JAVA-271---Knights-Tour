@@ -50,7 +50,8 @@ public class KnightsTour {
     private Point[] solution;
     
     private int[][] path;
-    private static final int[][] OFFSETS = new int[][]{{2, 1}, {2, -1}, {-2, 1}, {-2, -1}, {1, 2}, {1, -2}, {-1, 2}, {-1, -1}};
+    private static final int[][] OFFSETS = new int[][]{{2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1}};
+    private int totalCount = 0;
     
     /** No-arg constructor initializes the GUI:
         window - the main frame 
@@ -244,12 +245,18 @@ public class KnightsTour {
      */
     private boolean findSolution(int x, int y, int count, int size){
         if(count >= size){
+
+            System.out.println("Found solution");
+
             return true;
         }
         
         for(int[] offset: OFFSETS){
             if(validMove(x, y, offset) && path[y + offset[1]][x + offset[0]] == -1){
                 path[y + offset[1]][x + offset[0]] = count;
+                totalCount++;
+                System.out.println(totalCount);
+
                 if(findSolution(x + offset[0], y + offset[1], count + 1, size)){
                     return true;
                 }
