@@ -24,7 +24,7 @@ public class Square extends JPanel {
     */
     public Square() {
         super();
-        knight = new ImageIcon("knight.jpg");
+        knight = new ImageIcon("knight.png");
         
         setBorder(BorderFactory.createLineBorder(Color.BLUE));
         orderSeq = new JLabel(knight);
