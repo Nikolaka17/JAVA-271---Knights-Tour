@@ -16,7 +16,7 @@
 //                possibility of overlaying an opaque panel over the grid
 //                is still being considered to visually show the path of the
 //                knight as it tours the board.
-package ktdemo;
+//package ktdemo;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
@@ -31,6 +31,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import javax.swing.JOptionPane;
 
 /** GUI class for the KnightsTour
 */
@@ -115,8 +116,15 @@ public class KnightsTour {
        @Override
        public void actionPerformed(ActionEvent e) {
             if(e.getActionCommand().equals("Custom")) {
-                JOptionPane.showMessageDialog(window,"Feature not implemented yet.",
-                        "Error", JOptionPane.WARNING_MESSAGE);
+                int val = Integer.parseInt(JOptionPane.showInputDialog(window, "What is the size of the board you want?", "Board size", JOptionPane.QUESTION_MESSAGE));
+                if(board.getCurSize() != val) {
+                    window.remove(board);
+                    board = new ChessBoard(val);
+                    board.addMouseListener(new StartTourListener());
+                    window.add(board, BorderLayout.CENTER);
+                    window.revalidate();
+                    window.repaint();
+                }
             }
             else {
                 int val = Integer.parseInt(e.getActionCommand());
@@ -246,9 +254,6 @@ public class KnightsTour {
      */
     private boolean findSolution(int x, int y, int count, int size){
         if(count >= size){
-
-            System.out.println("Found solution");
-
             return true;
         }
         
