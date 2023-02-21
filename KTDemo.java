@@ -3,7 +3,7 @@
 // Last Modified: 03/12/2014
 // Description  : This is the Knights Tour launcher file.
 
-package ktdemo;
+//package ktdemo;
 
 public class KTDemo {
 
