@@ -230,6 +230,7 @@ public class KnightsTour {
                     }
                 }
             }
+            return true;
         }
         return false;
     }
