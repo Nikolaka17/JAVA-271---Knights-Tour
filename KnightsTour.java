@@ -16,7 +16,7 @@
 //                possibility of overlaying an opaque panel over the grid
 //                is still being considered to visually show the path of the
 //                knight as it tours the board.
-//package ktdemo;
+package ktdemo;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
@@ -50,8 +50,8 @@ public class KnightsTour {
     private Point[] solution;
     
     private int[][] path;
-    private static final int[][] OFFSETS = new int[][]{{2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1}};
-    private int totalCount = 0;
+    private static final int[] XMOVE = new int[]{2,1,-1,-2,-2,-1,1,2};
+    private static final int[] YMOVE = new int[]{1,2,2,1,-1,-2,-2,-1};
     
     /** No-arg constructor initializes the GUI:
         window - the main frame 
@@ -252,16 +252,36 @@ public class KnightsTour {
             return true;
         }
         
-        for(int[] offset: OFFSETS){
-            if(validMove(x, y, offset) && path[y + offset[1]][x + offset[0]] == -1){
-                path[y + offset[1]][x + offset[0]] = count;
-                totalCount++;
-                System.out.println(totalCount);
+        int[] moveCounts = new int[8];
+        int[] moveIndexes = new int[]{0,1,2,3,4,5,6,7};
+        for(int i = 0; i < 8; i++){
+            moveCounts[i] = countMoves(x + XMOVE[i], y + YMOVE[i]);
+        }
+        
+        boolean hasSwapped = true;
+        while(hasSwapped){
+            hasSwapped = false;
+            for(int i = 0; i < 7; i++){
+                if(moveCounts[i] > moveCounts[i + 1]){
+                    moveCounts[i] ^= moveCounts[i + 1];
+                    moveCounts[i + 1] ^= moveCounts[i];
+                    moveCounts[i] ^= moveCounts[i + 1];
+                    moveIndexes[i] ^= moveIndexes[i + 1];
+                    moveIndexes[i + 1] ^= moveIndexes[i];
+                    moveIndexes[i] ^= moveIndexes[i + 1];
+                    hasSwapped = true;
+                }
+            }
+        }
+        
+        for(int i: moveIndexes){
+            if(validMove(x, y, XMOVE[i], YMOVE[i])){
+                path[y + YMOVE[i]][x + XMOVE[i]] = count;
 
-                if(findSolution(x + offset[0], y + offset[1], count + 1, size)){
+                if(findSolution(x + XMOVE[i], y + YMOVE[i], count + 1, size)){
                     return true;
                 }
-                path[y + offset[1]][x + offset[0]] = -1;
+                path[y + YMOVE[i]][x + XMOVE[i]] = -1;
             }
         }
         
@@ -276,7 +296,23 @@ public class KnightsTour {
      * @param offset The x and y offsets representing the move
      * @return A boolean representing if the move is within bounds of the board
      */
-    private boolean validMove(int x, int y, int[] offset){
-        return (x + offset[0] >= 0 && x + offset[0] < board.getCurSize()) && (y + offset[1] >= 0 && y + offset[1] < board.getCurSize());
+    private boolean validMove(int x, int y, int dx, int dy){
+        return (x + dx >= 0 && x + dx < board.getCurSize()) && (y + dy >= 0 && y + dy < board.getCurSize())  && (path[y + dy][x + dx] == -1);
+    }
+    
+    /**
+     * Method that counts the number of possible moves from a given position
+     * @param x The x coordinate of the square
+     * @param y The y coordinate of the square
+     * @return The amount of possible moves from the square
+     */
+    private int countMoves(int x, int y){
+        int result = 0;
+        for(int i = 0; i < 8; i++){
+            if(validMove(x, y, XMOVE[i], YMOVE[i])){
+                result++;
+            }
+        }
+        return result;
     }
 }
