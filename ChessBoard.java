@@ -4,7 +4,7 @@
 // Description  : This ChessBoard class is used in the Knights Tour for my
 //                Math 271 students. The ChessBoard will consist of many
 //                "Squares", another class of this project.
-package ktdemo;
+//package ktdemo;
 
 import java.awt.Color;
 import java.awt.GridLayout;
